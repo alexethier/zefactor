@@ -1,5 +1,5 @@
-# Python Zefactir
-*zefactir* is library for renaming tokens in a project.
+# Python Zefactor
+*zefactor* is library for renaming tokens in a project.
 
 # Zefactor features
 * Find and replace tokens in a directory.
