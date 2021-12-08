@@ -85,6 +85,7 @@ class Loader:
     inclusive = True
     regex = False
     filename_only = False
+    case_sensitive = False
 
     for char in input_chars:
       if(char == "e"):
@@ -96,7 +97,7 @@ class Loader:
       else:
         return False
 
-    filter_token = FilterToken(token, inclusive, regex, filename_only)
+    filter_token = FilterToken(token, inclusive, regex, filename_only, case_sensitive)
     self._file_filter_tokens.append(filter_token)
     return True
 

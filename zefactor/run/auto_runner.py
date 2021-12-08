@@ -1,7 +1,5 @@
 import sys
 import logging
-from zefactor.api.finder_core import FinderRefactor
-from zefactor.api.replacer_core import ReplacerRefactor
 from zefactor.api.rename.renamer_core import RenamerRefactor
 from zompt.api.arrow_selection_prompt import ArrowSelectionPrompt
 from zefactor.input.loader import Loader
