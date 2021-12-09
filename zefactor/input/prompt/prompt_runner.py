@@ -382,7 +382,7 @@ class PromptRunner:
             print()
           print()
 
-          if(rename_action):
+          if(rename_action == "yes"):
             self._run_rename()
 
     except KeyboardInterrupt: 
