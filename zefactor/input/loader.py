@@ -20,9 +20,12 @@ class Loader:
     print("Error: Unknown input argument: " + bad_arg)
 
   def print_help(self):
-    print("Usage: [-g TODO:INCLUSIVE_MATCH ] ")
-    print("       [-ge TODO:EXCLUSIVE_MATCH ] ")
-    print("       [-c ][ --confirm ] # Confirm updates automatically. ")
+    print("Usage: [-g INCLUDE_FILE ] \t# Only refactor files with matching filename.")
+    print("       [-ge EXCLUDE_FILE ] \t# Exclude refactoring files with matching filename.")
+    print("       [-f FIND_TOKEN ] \t# Tokens to be replace.")
+    print("       [-r REPLACE_TOKEN ] \t# Replacement tokens.")
+    print("       [-sn --skip-rename ] \t# Skip renaming files.")
+    print("       [-c --confirm ] \t\t# Confirm updates automatically. ")
 
   def run(self):
 
@@ -73,7 +76,8 @@ class Loader:
       elif(arg.startswith('-sn') or arg.startswith('--skip-rename')):
         self._skip_rename = True
       else:
-        self.print_arg_error(arg)
+        if(not (arg.startswith('-h') or arg.startswith('--help'))):
+            self.print_arg_error(arg)
         self.print_help()
         return False
 
