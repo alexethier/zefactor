@@ -1,6 +1,7 @@
 from io import StringIO
 from zefactor.api.find_scanner import FindScanner
 from zefactor.api.transform import Transform
+from zefactor.api.match_reason import MatchReason
 
 class FinderRefactor:
 
@@ -45,7 +46,7 @@ class FinderRefactor:
       matched_find_scanners = []
       for find_scanner in find_scanners:
         match = find_scanner.check_next(char)
-        if(match):
+        if(match.value <= 0):
           if(find_scanner.is_done()):
             yield find_scanner.get_record()
           else:
@@ -84,11 +85,6 @@ class FinderRefactor:
 
   # Outputs a list of operations to apply to replace tokens
   def classify(self, raw_text, find_tokens):
-
-    #print("AE:")
-    #print(raw_text)
-    #print(find_tokens)
-    #print("AE-DONE")
 
     transform = Transform()
 

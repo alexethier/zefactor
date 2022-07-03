@@ -53,26 +53,26 @@ do
 done
 
 if [ "$INSTALL" == "true" ]; then
-  pip install wheel
-  pip list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip uninstall -y {} || true
+  pip3 install wheel
+  pip3 list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip3 uninstall -y {} || true
   python3 setup.py bdist_wheel
-  ls -1 ./dist | grep -e ".whl$" | xargs -I {} pip install ./dist/{}
+  ls -1 ./dist | grep -e ".whl$" | xargs -I {} pip3 install ./dist/{}
 fi
 
 if [ "$TEST_DEPLOY" == "true" ]; then
   echo "Uploading to test pypi"
   twine upload --repository testpypi dist/*
-  pip list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip uninstall -y {} || true
+  pip3 list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip3 uninstall -y {} || true
   echo "Reinstalling from test pypi"
-  pip install --index-url https://test.pypi.org/simple/ $PROJECT_NAME
+  pip3 install --index-url https://test.pypi.org/simple/ $PROJECT_NAME
 fi
 
 if [ "$PROD_DEPLOY" == "true" ]; then
   echo "Uploading to Production PyPi"
   twine upload dist/*
-  pip list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip uninstall -y {} || true
+  pip3 list | tr -s ' ' | grep -e "^$PROJECT_NAME " | cut -d' ' -f1 | xargs -I {} pip3 uninstall -y {} || true
   echo "Reinstalling from test pypi"
-  pip install $PROJECT_NAME
+  pip3 install $PROJECT_NAME
 fi
 
 if [ "$SKIP_CLEANUP" == "false" ]; then

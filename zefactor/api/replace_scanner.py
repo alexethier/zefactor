@@ -3,7 +3,7 @@ from zefactor.api.base_checker import BaseChecker
 class ReplaceScanner:
 
   def __init__(self, find_text, replace_text, index, start_symbol):
-    self._checker = BaseChecker([ find_text ])
+    self._checker = BaseChecker([ find_text ], True)
 
     self._find_text = find_text
     self._replace_text = replace_text
