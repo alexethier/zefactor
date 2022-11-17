@@ -21,7 +21,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
   name=project_name,
-  version='0.0.7',
+  version='2.0.0',
   description='Flexible find and replace for refactoring projects.',
   long_description=long_description,
   long_description_content_type='text/markdown',
@@ -42,7 +42,7 @@ setup(
   ],
   entry_points={
       'console_scripts': [
-          'zefactor=zefactor.run.runner:main',
+          'zefactor=zefactor.run.runner_manager:main',
       ],
   },
 )

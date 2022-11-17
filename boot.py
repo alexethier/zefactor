@@ -1,4 +1,4 @@
-from zefactor.run.runner import Runner
+from zefactor.run.runner_manager import RunnerManager
 
 class Boot:
 
@@ -7,7 +7,7 @@ class Boot:
 
   def boot(self):
 
-    runner = Runner()
+    runner = RunnerManager()
     runner.run()
 
 if __name__ == "__main__":

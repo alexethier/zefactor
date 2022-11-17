@@ -5,18 +5,16 @@ import logging
 from zompt.api.arrow_selection_prompt import ArrowSelectionPrompt
 from zompt.api.input_prompt import InputPrompt
 from zind.api.core_find import Find
-from zefactor.api.finder_core import FinderRefactor
-from zefactor.api.rename.renamer_core import RenamerRefactor
-from zefactor.api.entries import Entries
+from zefactor.run.entries import Entries
 from zefactor.input.prompt.prompt_helper import PromptHelper
-from zefactor.run.runner_helper import RunnerHelper
+from zefactor.run.runner import Runner
 
 class PromptRunner:
 
   def __init__(self, loader):
     self._prompt_helper = PromptHelper()
     self._loader = loader
-    self._runner_helper = RunnerHelper()
+    self._runner = Runner()
 
     self._preview_files = []
     self._preview_extended = True
@@ -245,7 +243,7 @@ class PromptRunner:
 
   def _run_refactor(self):
 
-    entries = self._runner_helper.compute_refactor(self._loader)
+    entries = self._runner.compute_refactor(self._loader)
 
     replacement_mapping = entries.get_replacement_mappings()
     edited_files = entries.get_files()
@@ -258,7 +256,7 @@ class PromptRunner:
     print("zefactor -y " + command_text)
 
     edited_files = entries.get_files()
-    entries = self._runner_helper.compute_refactor(self._loader) # This is called again in case any files were edited between prompts.
+    entries = self._runner.compute_refactor(self._loader) # This is called again in case any files were edited between prompts.
 
     if(len(edited_files) == 0):
       print()
@@ -291,7 +289,7 @@ class PromptRunner:
 
       print()
       if(apply_replacements == "yes"):
-        self._runner_helper.apply_replacement(entries)
+        self._runner.apply_replacement(entries)
         print("Changes complete")
         print()
 
@@ -301,42 +299,14 @@ class PromptRunner:
         cleanup_action = cleanup_prompt.run()
         print()
         if(cleanup_action == "yes - delete backup files"):
-          self._runner_helper.cleanup_backup(entries)
+          self._runner.cleanup_backup(entries)
           print("Backup files removed.")
         elif(cleanup_action == "yes - keep backup files"):
           print("Backup files retained.")
         elif(cleanup_action == "no - revert changes"):
-          self._runner_helper.revert_backup(entries)
+          self._runner.revert_backup(entries)
           print("Files reverted.")
           print()
-
-  def _run_rename(self):
-
-    rename_map = self._runner_helper.find_rename_candidates(self._loader)
-    renamer_refactor = RenamerRefactor()
-    rename_operations = list(renamer_refactor.calculate(rename_map))
-
-    if(len(rename_operations) > 0):
-      print()
-      print("The following file rename operations will be applied in order:")
-      print()
-      index = 1
-      for name, rename in rename_operations:
-        print(str(index) + ": " + name + " -> " + rename)
-        index = index + 1
-      print()
-
-      print("Apply rename operations?")
-      print()
-      rename_prompt = ArrowSelectionPrompt(["yes", "no"])
-      rename_action = rename_prompt.run()
-      if(rename_action == "yes"):
-        renamer_refactor.apply(rename_operations)
-        print()
-        print("File renames complete!")
-    else:
-      print()
-      print("No file renames found.")
 
   def run(self):
 
@@ -356,34 +326,34 @@ class PromptRunner:
           self._prompt_refactor_tokens()
           self._run_refactor()
 
-      if(not self._loader.is_skip_rename()):
-        continue_rename = "yes"
-        if(self._loader.is_skip_refactor() or skip_prompt_refactor_tokens):
-          if(skip_prompt_refactor_tokens):
-            print()
-            print("Rename files?")
-            print()
-            continue_rename_prompt = ArrowSelectionPrompt(["yes", "no"])
-            continue_rename = continue_rename_prompt.run()
-          self._prompt_helper.clear()
-          print()
-          if(continue_rename == "yes"):
-            self._prompt_refactor_tokens()
-
-        if(continue_rename == "yes"):
-
-          rename_action = "yes"
-          if(not self._loader.is_skip_refactor() and not skip_prompt_refactor_tokens):
-            print()
-            print("Rename files?")
-            print()
-            rename_prompt = ArrowSelectionPrompt(["yes", "no"])
-            rename_action = rename_prompt.run()
-            print()
-          print()
-
-          if(rename_action == "yes"):
-            self._run_rename()
+#      if(not self._loader.is_skip_rename()):
+#        continue_rename = "yes"
+#        if(self._loader.is_skip_refactor() or skip_prompt_refactor_tokens):
+#          if(skip_prompt_refactor_tokens):
+#            print()
+#            print("Rename files?")
+#            print()
+#            continue_rename_prompt = ArrowSelectionPrompt(["yes", "no"])
+#            continue_rename = continue_rename_prompt.run()
+#          self._prompt_helper.clear()
+#          print()
+#          if(continue_rename == "yes"):
+#            self._prompt_refactor_tokens()
+#
+#        if(continue_rename == "yes"):
+#
+#          rename_action = "yes"
+#          if(not self._loader.is_skip_refactor() and not skip_prompt_refactor_tokens):
+#            print()
+#            print("Rename files?")
+#            print()
+#            rename_prompt = ArrowSelectionPrompt(["yes", "no"])
+#            rename_action = rename_prompt.run()
+#            print()
+#          print()
+#
+#          if(rename_action == "yes"):
+#            self._run_rename()
 
     except KeyboardInterrupt: 
       pass

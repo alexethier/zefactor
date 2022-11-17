@@ -1,16 +1,15 @@
 import sys
 import logging
-from zefactor.api.rename.renamer_core import RenamerRefactor
 from zompt.api.arrow_selection_prompt import ArrowSelectionPrompt
 from zefactor.input.loader import Loader
-from zefactor.api.entries import Entries
-from zefactor.run.runner_helper import RunnerHelper
+from zefactor.run.entries import Entries
+from zefactor.run.runner import Runner
 
 class AutoRunner:
 
   def __init__(self, loader):
     self._loader = loader
-    self._runner_helper = RunnerHelper()
+    self._runner_helper = Runner()
 
   def _run_refactor(self):
 
@@ -68,35 +67,6 @@ class AutoRunner:
           self._runner_helper.revert_backup(entries)
           print("Files reverted.")
 
-  def _run_rename(self):
-
-    rename_map = self._runner_helper.find_rename_candidates(self._loader)
-    #for file_match in rename_map:
-    #  print(file_match + " -> " + rename_map[file_match])
-    renamer_refactor = RenamerRefactor()
-    rename_operations = list(renamer_refactor.calculate(rename_map))
-
-    if(len(rename_operations) > 0):
-      print("The following file rename operations will be applied in order:")
-      print()
-      index = 1
-      for name, rename in rename_operations:
-        print(str(index) + ": " + name + " -> " + rename)
-        index = index + 1
-      print()
-
-      print("Apply rename operations?")
-      print()
-      rename_prompt = ArrowSelectionPrompt(["yes", "no"])
-      rename_action = rename_prompt.run()
-      print()
-      if(rename_action == "yes"):
-        renamer_refactor.apply(rename_operations)
-        print()
-        print("File renames complete!")
-    else:
-      print("No file renames found.")
-
   def run(self):
 
     try:
@@ -114,8 +84,8 @@ class AutoRunner:
       if(not self._loader.is_skip_refactor()):
         self._run_refactor()
 
-      if(not self._loader.is_skip_rename()):
-        self._run_rename()
+      #if(not self._loader.is_skip_rename()):
+      #  self._run_rename()
 
     except KeyboardInterrupt:
       pass

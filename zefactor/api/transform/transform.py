@@ -2,7 +2,6 @@ class Transform:
 
   def __init__(self):
     self._transforms = []
-    pass;
 
   # Add a new transform the list
   def push(self, case, delimiter):
@@ -11,22 +10,6 @@ class Transform:
 
   # Apply transforms in order to the input replace tokens
   def apply(self, replace_tokens):
-
-    #print()
-    #print("Transforms")
-    #print()
-    #for case, delimiter in self._transforms:
-    #  print(case + " " + delimiter)
-
-    #print()
-    #print("Replace Tokens")
-    #print()
-    #for replace_token in replace_tokens:
-    #  print(replace_token)
-
-    #print()
-    #import sys
-    #sys.exit(0)
 
     replacement_text = ""
 
