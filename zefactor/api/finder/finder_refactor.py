@@ -18,8 +18,8 @@ class FinderRefactor:
         for item in self._scan(input_fd, find_tokens):
           yield item
     except UnicodeDecodeError:
-      if(not self._suppress_warnings):
-        print("[WARNING] could not decode: " + filepath + " as utf-8, skipping refactor.")
+      print("[WARNING] could not decode: " + filepath + " as utf-8, skipping refactor.")
+      #if(not self._suppress_warnings):
 
   # Scans files and finds flexible matching patterns to the search tokens.
   def _scan(self, input_fd, find_tokens):
